@@ -8,7 +8,7 @@ export default function Home() {
 
   return (
     <>
-    <Calendar mode="single" selected={date} onSelect={setDate} />
+    <Calendar mode="single" selected={date} onSelect={setDate}  className="rounded-md border shadow-sm" />
     </>
 
   );
