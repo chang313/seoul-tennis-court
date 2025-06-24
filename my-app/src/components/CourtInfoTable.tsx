@@ -89,7 +89,10 @@ export function DataTable<TData, TValue>({
 const CourtInfoTable = () => {
   const {data: courtInfoList} = useQuery<PublicReservationSportResponse>({
     queryKey: ['courtInfoList'],
-    queryFn: () => getCourtInfoList()
+    queryFn: () => getCourtInfoList(),
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   })
 
   return (
