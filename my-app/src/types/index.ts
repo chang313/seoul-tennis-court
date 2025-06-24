@@ -3,7 +3,7 @@ export type CourtInfo = {
   SVCID: string;
   MAXCLASSNM: string;
   MINCLASSNM: string;
-  SVCSTATNM: "접수중" | "예약마감";
+  SVCSTATNM: '접수중' | '예약마감';
   SVCNM: string;
   PAYATNM: string;
   PLACENM: string;
@@ -36,4 +36,4 @@ export type PublicReservationSportResponse = {
     RESULT: Result;
     row: CourtInfo[];
   };
-}; 
+};
