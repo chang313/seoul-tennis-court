@@ -1,2 +1,4 @@
 # Ignore artifacts:
 
+pnpm-lock.yaml
+postcss.config.mjs
