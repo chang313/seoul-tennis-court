@@ -15,8 +15,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { CourtInfo } from "@/types"
+import { CourtInfo, PublicReservationSportResponse } from "@/types"
 import { columns } from "./columns"
+import { useQuery } from "@tanstack/react-query"
+import { getCourtInfoList } from "@/api"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -82,15 +84,17 @@ export function DataTable<TData, TValue>({
 }
 
 
-type Prop = {
-  courtInfoList: CourtInfo[];
-};
+  
 
-const CourtInfoTable = (props: Prop) => {
-  const {courtInfoList} = props
+const CourtInfoTable = () => {
+  const {data: courtInfoList} = useQuery<PublicReservationSportResponse>({
+    queryKey: ['courtInfoList'],
+    queryFn: () => getCourtInfoList()
+  })
+
   return (
     <div>
-      <DataTable columns={columns} data={courtInfoList} />
+      <DataTable columns={columns} data={courtInfoList?.ListPublicReservationSport.row || []} />
     </div>
   )
 }
