@@ -21,11 +21,16 @@ import { columns } from "./columns"
 import { useQuery } from "@tanstack/react-query"
 import { getCourtInfoList } from "@/api"
 import { Button } from "./ui/button"
+import { useState } from "react"
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "./ui/select"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
+
+
+const pageSizeOptions = [10, 20, 30, 40, 50]
 
 export function DataTable<TData, TValue>({
   columns,
@@ -37,6 +42,10 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   })
+
+  const handleChangePageSize = (value: string) => {
+    table.setPageSize(Number(value))
+  }
 
   return (
     <div>
@@ -85,6 +94,18 @@ export function DataTable<TData, TValue>({
       </Table>
     </div>
     <div className="flex items-center justify-end space-x-2 py-4">
+      <Select onValueChange={handleChangePageSize} defaultValue={pageSizeOptions[0].toString()}>
+        <SelectTrigger>
+          <SelectValue placeholder="Page Size" />
+          </SelectTrigger>
+          <SelectContent>
+            {pageSizeOptions.map((option) => (
+              <SelectItem key={option} value={option.toString()}>
+                {option}
+              </SelectItem>
+            ))}
+          </SelectContent>
+      </Select>
         <Button
           variant="outline"
           size="sm"
