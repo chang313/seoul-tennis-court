@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient()
 
-export default function Home() {
+const Home = () => {
   const [date, setDate] = useState<Date | undefined>(undefined);
 
 
@@ -20,3 +20,5 @@ export default function Home() {
 
   );
 }
+
+export default Home;
