@@ -41,11 +41,11 @@ export const columns: ColumnDef<CourtInfo>[] = [
     header: "지역",
   },
   {
-    accessorKey: "SVCOPNBGNDT",
-    header: "예약 시작일",
+    accessorKey: "RCPTBGNDT",
+    header: "접수 시작일시",
   },
   {
-    accessorKey: "SVCOPNENDDT",
-    header: "예약 종료일",
+    accessorKey: "RCPTBGDDT",
+    header: "접수 종료일시",
   },
 ]
