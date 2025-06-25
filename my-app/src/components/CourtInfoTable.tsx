@@ -13,13 +13,17 @@ import { PublicReservationSportResponse } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { useState } from 'react';
 import { columns } from './columns';
 import { Button } from './ui/button';
+import { Input } from './ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 interface DataTableProps<TData, TValue> {
@@ -30,11 +34,17 @@ interface DataTableProps<TData, TValue> {
 const pageSizeOptions = [10, 20, 30, 40, 50];
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      columnFilters,
+    },
   });
 
   const handleChangePageSize = (value: string) => {
@@ -43,6 +53,14 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 
   return (
     <div>
+      <div className='flex items-center py-4'>
+        <Input
+          placeholder='Filter rows...'
+          value={(table.getColumn('SVCNM')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('SVCNM')?.setFilterValue(event.target.value)}
+          className='max-w-sm'
+        />
+      </div>
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
