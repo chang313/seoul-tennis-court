@@ -43,7 +43,7 @@ export const columns: ColumnDef<CourtInfo>[] = [
     header: '접수 시작일시',
   },
   {
-    accessorKey: 'RCPTBGDDT',
+    accessorKey: 'RCPTENDDT',
     header: '접수 종료일시',
   },
 ];
