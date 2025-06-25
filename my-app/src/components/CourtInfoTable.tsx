@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { CourtInfo, PublicReservationSportResponse } from '@/types';
+import { PublicReservationSportResponse } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import {
   ColumnDef,
@@ -18,7 +18,6 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useState } from 'react';
 import { columns } from './columns';
 import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
