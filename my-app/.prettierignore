@@ -1,4 +1,8 @@
-# Ignore artifacts:
-
 pnpm-lock.yaml
 postcss.config.mjs
+
+node_modules
+public
+
+# Ignore all json files
+**/*.json
