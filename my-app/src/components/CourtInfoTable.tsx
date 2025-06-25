@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { PublicReservationSportResponse } from '@/types';
+import { CourtInfo, PublicReservationSportResponse } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import {
   ColumnDef,
@@ -33,7 +33,21 @@ interface DataTableProps<TData, TValue> {
 
 const pageSizeOptions = [10, 20, 30, 40, 50];
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+type TableProps = {
+  columns: ColumnDef<CourtInfo>[];
+  data: CourtInfo[];
+  wishRegion: string;
+  liveRegion: string;
+  date: Date | undefined;
+};
+
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+  wishRegion,
+  liveRegion,
+  date,
+}: TableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
     data,
@@ -133,7 +147,13 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   );
 }
 
-const CourtInfoTable = () => {
+type Props = {
+  wishRegion: string;
+  liveRegion: string;
+  date: Date | undefined;
+};
+
+const CourtInfoTable = ({ wishRegion, liveRegion, date }: Props) => {
   const { data: courtInfoList } = useQuery<PublicReservationSportResponse>({
     queryKey: ['courtInfoList'],
     queryFn: () => getCourtInfoList(),
@@ -142,9 +162,37 @@ const CourtInfoTable = () => {
     refetchOnMount: false,
   });
 
+  const filterByRegionAndDate = (row: CourtInfo) => {
+    // Region filter
+    if (wishRegion && row.AREANM !== wishRegion) return false;
+    // Date filter
+    if (date) {
+      const start = new Date(row.RCPTBGNDT);
+      const end = new Date(row.RCPTENDDT);
+      // Helper to zero out time
+      const toDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      const selectedDay = toDay(date);
+      const startDay = toDay(start);
+      const endDay = toDay(end);
+      // Only keep if selectedDay is between startDay and endDay (inclusive)
+      if (selectedDay < startDay || selectedDay > endDay) return false;
+    }
+    return true;
+  };
+
+  const filteredRows = (courtInfoList?.ListPublicReservationSport.row || []).filter(
+    filterByRegionAndDate
+  );
+
   return (
     <div>
-      <DataTable columns={columns} data={courtInfoList?.ListPublicReservationSport.row || []} />
+      <DataTable
+        columns={columns}
+        data={filteredRows}
+        wishRegion={wishRegion}
+        liveRegion={liveRegion}
+        date={date}
+      />
     </div>
   );
 };

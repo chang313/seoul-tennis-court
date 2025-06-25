@@ -84,7 +84,7 @@ const Home = () => {
           ))}
         </SelectContent>
       </Select>
-      <CourtInfoTable />
+      <CourtInfoTable wishRegion={wishRegion} liveRegion={liveRegion} date={date} />
     </QueryClientProvider>
   );
 };
