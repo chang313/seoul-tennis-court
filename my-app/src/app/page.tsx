@@ -1,9 +1,10 @@
 'use client';
+
+import CourtInfoTable from '@/components/CourtInfoTable';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import CourtInfoTable from '@/components/CourtInfoTable';
-import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from 'react';
 
 const queryClient = new QueryClient();
 
@@ -13,10 +14,10 @@ const Home = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <Calendar
-        mode="single"
+        mode='single'
         selected={date}
         onSelect={setDate}
-        className="rounded-md border shadow-sm"
+        className='rounded-md border shadow-sm'
       />
       <CourtInfoTable />
     </QueryClientProvider>

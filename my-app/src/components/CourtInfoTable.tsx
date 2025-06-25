@@ -1,13 +1,6 @@
 'use client';
 
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-
+import { getCourtInfoList } from '@/api';
 import {
   Table,
   TableBody,
@@ -17,12 +10,18 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { CourtInfo, PublicReservationSportResponse } from '@/types';
-import { columns } from './columns';
 import { useQuery } from '@tanstack/react-query';
-import { getCourtInfoList } from '@/api';
-import { Button } from './ui/button';
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
 import { useState } from 'react';
-import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from './ui/select';
+import { columns } from './columns';
+import { Button } from './ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -45,7 +44,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 
   return (
     <div>
-      <div className="rounded-md border">
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -75,7 +74,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={columns.length} className='h-24 text-center'>
                   No results.
                 </TableCell>
               </TableRow>
@@ -83,10 +82,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className='flex items-center justify-end space-x-2 py-4'>
         <Select onValueChange={handleChangePageSize} defaultValue={pageSizeOptions[0].toString()}>
           <SelectTrigger>
-            <SelectValue placeholder="Page Size" />
+            <SelectValue placeholder='Page Size' />
           </SelectTrigger>
           <SelectContent>
             {pageSizeOptions.map((option) => (
@@ -97,16 +96,16 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           </SelectContent>
         </Select>
         <Button
-          variant="outline"
-          size="sm"
+          variant='outline'
+          size='sm'
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           Previous
         </Button>
         <Button
-          variant="outline"
-          size="sm"
+          variant='outline'
+          size='sm'
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >

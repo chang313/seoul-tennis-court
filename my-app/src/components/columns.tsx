@@ -1,9 +1,9 @@
 'use client';
 
-import { ColumnDef } from '@tanstack/react-table';
 import { CourtInfo } from '@/types';
-import { Button } from './ui/button';
+import { ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
+import { Button } from './ui/button';
 
 export const columns: ColumnDef<CourtInfo>[] = [
   {
@@ -28,7 +28,7 @@ export const columns: ColumnDef<CourtInfo>[] = [
     cell: ({ row }) => {
       const url = row.getValue('SVCURL') as string;
       return (
-        <Link href={url} target="_blank">
+        <Link href={url} target='_blank'>
           바로가기
         </Link>
       );

@@ -10,7 +10,7 @@ export const getCourtInfoList = async () => {
       headers: {
         'Content-Type': 'application/json',
       },
-    },
+    }
   );
   return response.data;
 };
