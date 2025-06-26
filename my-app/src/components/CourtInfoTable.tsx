@@ -46,6 +46,8 @@ type TableProps = {
   date: Date | undefined;
 };
 
+const AVAILABLE_STATUS = '접수중';
+
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -53,9 +55,10 @@ export function DataTable<TData, TValue>({
   liveRegion,
   date,
 }: TableProps) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
+    { id: 'SVCSTATNM', value: AVAILABLE_STATUS },
+  ]);
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [isOnlyAvailable, setIsOnlyAvailable] = useState(true);
 
   const table = useReactTable({
     data,
@@ -80,6 +83,10 @@ export function DataTable<TData, TValue>({
     table.getColumn('SVCNM')?.setFilterValue(event.target.value);
   };
 
+  const handleChangeIsOnlyAvailable = (value: boolean) => {
+    table.getColumn('SVCSTATNM')?.setFilterValue(value ? AVAILABLE_STATUS : '');
+  };
+
   return (
     <div>
       <div className='flex items-center justify-between'>
@@ -94,8 +101,8 @@ export function DataTable<TData, TValue>({
         <div className='flex items-center space-x-2'>
           <Switch
             id='only-available'
-            checked={isOnlyAvailable}
-            onCheckedChange={setIsOnlyAvailable}
+            defaultChecked={true}
+            onCheckedChange={handleChangeIsOnlyAvailable}
           />
           <Label htmlFor='only-available'>접수 중인 코트만 보기</Label>
         </div>
@@ -139,35 +146,40 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className='flex items-center justify-end space-x-2 py-4'>
-        <Select onValueChange={handleChangePageSize} defaultValue={pageSizeOptions[0].toString()}>
-          <SelectTrigger>
-            <SelectValue placeholder='Page Size' />
-          </SelectTrigger>
-          <SelectContent>
-            {pageSizeOptions.map((option) => (
-              <SelectItem key={option} value={option.toString()}>
-                {option}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
+      <div className='flex items-center justify-between'>
+        <div className='text-muted-foreground flex-1 text-sm'>
+          총 {table.getFilteredRowModel().rows.length} 행
+        </div>
+        <div className='flex items-center justify-end space-x-2 py-4'>
+          <Select onValueChange={handleChangePageSize} defaultValue={pageSizeOptions[0].toString()}>
+            <SelectTrigger>
+              <SelectValue placeholder='Page Size' />
+            </SelectTrigger>
+            <SelectContent>
+              {pageSizeOptions.map((option) => (
+                <SelectItem key={option} value={option.toString()}>
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   );
