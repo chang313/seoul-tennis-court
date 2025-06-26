@@ -3,20 +3,19 @@
 import { CourtInfo } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
-import { Button } from './ui/button';
 
 export const columns: ColumnDef<CourtInfo>[] = [
   {
-    accessorKey: 'SVCID',
-    header: '서비스 ID',
+    accessorKey: 'SVCNM',
+    header: '서비스명',
   },
   {
     accessorKey: 'SVCSTATNM',
     header: '상태',
   },
   {
-    accessorKey: 'SVCNM',
-    header: '서비스명',
+    accessorKey: 'AREANM',
+    header: '지역',
   },
   {
     accessorKey: 'PLACENM',
@@ -34,10 +33,7 @@ export const columns: ColumnDef<CourtInfo>[] = [
       );
     },
   },
-  {
-    accessorKey: 'AREANM',
-    header: '지역',
-  },
+
   {
     accessorKey: 'RCPTBGNDT',
     header: '접수 시작일시',
