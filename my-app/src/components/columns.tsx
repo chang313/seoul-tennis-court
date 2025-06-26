@@ -2,12 +2,24 @@
 
 import { CourtInfo } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown } from 'lucide-react';
 import Link from 'next/link';
+import { Button } from './ui/button';
 
 export const columns: ColumnDef<CourtInfo>[] = [
   {
     accessorKey: 'SVCNM',
-    header: '서비스명',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          서비스명
+          <ArrowUpDown />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: 'SVCSTATNM',
