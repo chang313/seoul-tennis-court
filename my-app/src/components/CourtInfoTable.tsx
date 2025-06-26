@@ -55,6 +55,8 @@ export function DataTable<TData, TValue>({
 }: TableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [isOnlyAvailable, setIsOnlyAvailable] = useState(true);
+
   const table = useReactTable({
     data,
     columns,
@@ -80,14 +82,25 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className='flex items-center py-4'>
-        <Input
-          placeholder='Filter rows...'
-          value={(table.getColumn('SVCNM')?.getFilterValue() as string) ?? ''}
-          onChange={handleSearchInputChange}
-          className='max-w-sm'
-        />
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center py-4'>
+          <Input
+            placeholder='Filter rows...'
+            value={(table.getColumn('SVCNM')?.getFilterValue() as string) ?? ''}
+            onChange={handleSearchInputChange}
+            className='max-w-sm'
+          />
+        </div>
+        <div className='flex items-center space-x-2'>
+          <Switch
+            id='only-available'
+            checked={isOnlyAvailable}
+            onCheckedChange={setIsOnlyAvailable}
+          />
+          <Label htmlFor='only-available'>접수 중인 코트만 보기</Label>
+        </div>
       </div>
+
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
@@ -127,10 +140,6 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className='flex items-center justify-end space-x-2 py-4'>
-        <div className='flex items-center space-x-2'>
-          <Switch id='only-available' />
-          <Label htmlFor='only-available'>접수 중인 코트만 보기</Label>
-        </div>
         <Select onValueChange={handleChangePageSize} defaultValue={pageSizeOptions[0].toString()}>
           <SelectTrigger>
             <SelectValue placeholder='Page Size' />
