@@ -27,7 +27,9 @@ import { useState } from 'react';
 import { columns } from './columns';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Switch } from './ui/switch';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -125,6 +127,10 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className='flex items-center justify-end space-x-2 py-4'>
+        <div className='flex items-center space-x-2'>
+          <Switch id='only-available' />
+          <Label htmlFor='only-available'>접수 중인 코트만 보기</Label>
+        </div>
         <Select onValueChange={handleChangePageSize} defaultValue={pageSizeOptions[0].toString()}>
           <SelectTrigger>
             <SelectValue placeholder='Page Size' />
