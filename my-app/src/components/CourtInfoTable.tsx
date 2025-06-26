@@ -20,6 +20,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { debounce } from 'lodash';
 import { useState } from 'react';
 import { columns } from './columns';
 import { Button } from './ui/button';
@@ -65,13 +66,17 @@ export function DataTable<TData, TValue>({
     table.setPageSize(Number(value));
   };
 
+  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    table.getColumn('SVCNM')?.setFilterValue(event.target.value);
+  };
+
   return (
     <div>
       <div className='flex items-center py-4'>
         <Input
           placeholder='Filter rows...'
           value={(table.getColumn('SVCNM')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('SVCNM')?.setFilterValue(event.target.value)}
+          onChange={handleSearchInputChange}
           className='max-w-sm'
         />
       </div>
