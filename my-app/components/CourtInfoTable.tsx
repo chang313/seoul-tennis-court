@@ -89,7 +89,7 @@ export function DataTable<TData, TValue>({
       <div className='flex items-center justify-between'>
         <div className='flex items-center py-4'>
           <Input
-            placeholder='Filter rows...'
+            placeholder='검색어를 입력하세요'
             value={(table.getColumn('SVCNM')?.getFilterValue() as string) ?? ''}
             onChange={handleSearchInputChange}
             className='max-w-sm'
@@ -166,7 +166,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            이전
           </Button>
           <Button
             variant='outline'
@@ -174,7 +174,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            다음
           </Button>
         </div>
       </div>
