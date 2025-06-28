@@ -29,6 +29,7 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Switch } from './ui/switch';
+import Spinner from './ui/Spinner';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -42,6 +43,7 @@ type TableProps = {
   data: CourtInfo[];
   wishRegion: string;
   date: Date | undefined;
+  isLoading: boolean;
 };
 
 const AVAILABLE_STATUS = '접수중';
@@ -51,6 +53,7 @@ export function DataTable<TData, TValue>({
   data,
   wishRegion,
   date,
+  isLoading,
 }: TableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: 'SVCSTATNM', value: AVAILABLE_STATUS },
@@ -123,7 +126,13 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  <Spinner />
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
@@ -188,7 +197,7 @@ type Props = {
 };
 
 const CourtInfoTable = ({ wishRegion,  date }: Props) => {
-  const { data: courtInfoList } = useQuery<PublicReservationSportResponse>({
+  const { data: courtInfoList, isLoading } = useQuery<PublicReservationSportResponse>({
     queryKey: ['courtInfoList'],
     queryFn: () => getCourtInfoList(),
     staleTime: 1000 * 60 * 5,
@@ -225,6 +234,7 @@ const CourtInfoTable = ({ wishRegion,  date }: Props) => {
         data={filteredRows}
         wishRegion={wishRegion}
         date={date}
+        isLoading={isLoading}
       />
     </div>
   );
