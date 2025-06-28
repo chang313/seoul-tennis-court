@@ -1,7 +1,6 @@
 'use client';
 
 import CourtInfoTable from '../components/CourtInfoTable';
-import { Button } from '../components/ui/button';
 import { Calendar } from '../components/ui/calendar';
 import {
   Select,
@@ -47,7 +46,7 @@ const Home = () => {
   const [date, setDate] = useState<Date | undefined>(undefined);
 
   const [wishRegion, setWishRegion] = useState<string>(''); // 원하는 지역구
-  const [liveRegion, setLiveRegion] = useState<string>(''); // 거주지역
+
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -71,20 +70,8 @@ const Home = () => {
           ))}
         </SelectContent>
       </Select>
-      <h2>거주지역</h2>
-      <Select onValueChange={setLiveRegion} defaultValue={liveRegion}>
-        <SelectTrigger>
-          <SelectValue placeholder='원하는 구' />
-        </SelectTrigger>
-        <SelectContent>
-          {regionOptions.map((option: string) => (
-            <SelectItem key={option} value={option}>
-              {option}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <CourtInfoTable wishRegion={wishRegion} liveRegion={liveRegion} date={date} />
+
+      <CourtInfoTable wishRegion={wishRegion} date={date} />
     </QueryClientProvider>
   );
 };

@@ -22,7 +22,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { debounce } from 'lodash';
 import { useState } from 'react';
 import { columns } from './columns';
 import { Button } from './ui/button';
@@ -42,7 +41,6 @@ type TableProps = {
   columns: ColumnDef<CourtInfo>[];
   data: CourtInfo[];
   wishRegion: string;
-  liveRegion: string;
   date: Date | undefined;
 };
 
@@ -52,7 +50,6 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   wishRegion,
-  liveRegion,
   date,
 }: TableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
@@ -187,11 +184,10 @@ export function DataTable<TData, TValue>({
 
 type Props = {
   wishRegion: string;
-  liveRegion: string;
   date: Date | undefined;
 };
 
-const CourtInfoTable = ({ wishRegion, liveRegion, date }: Props) => {
+const CourtInfoTable = ({ wishRegion,  date }: Props) => {
   const { data: courtInfoList } = useQuery<PublicReservationSportResponse>({
     queryKey: ['courtInfoList'],
     queryFn: () => getCourtInfoList(),
@@ -228,7 +224,6 @@ const CourtInfoTable = ({ wishRegion, liveRegion, date }: Props) => {
         columns={columns}
         data={filteredRows}
         wishRegion={wishRegion}
-        liveRegion={liveRegion}
         date={date}
       />
     </div>
