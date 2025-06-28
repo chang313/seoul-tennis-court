@@ -50,27 +50,32 @@ const Home = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <h2>원하는 예약일</h2>
-      <Calendar
-        mode='single'
-        selected={date}
-        onSelect={setDate}
-        className='rounded-md border shadow-sm'
-      />
-      <h2>원하는 구</h2>
-      <Select onValueChange={setWishRegion} defaultValue={wishRegion}>
-        <SelectTrigger>
-          <SelectValue placeholder='원하는 구' />
-        </SelectTrigger>
-        <SelectContent>
-          {regionOptions.map((option: string) => (
-            <SelectItem key={option} value={option}>
-              {option}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
+      <div className="flex gap-8">
+        <div className="flex flex-col">
+          <h2>원하는 예약일</h2>
+          <Calendar
+            mode='single'
+            selected={date}
+            onSelect={setDate}
+            className='rounded-md border shadow-sm'
+          />
+        </div>
+        <div className="flex flex-col">
+          <h2>원하는 구</h2>
+          <Select onValueChange={setWishRegion} defaultValue={wishRegion}>
+            <SelectTrigger>
+              <SelectValue placeholder='원하는 구' />
+            </SelectTrigger>
+            <SelectContent>
+              {regionOptions.map((option: string) => (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
       <CourtInfoTable wishRegion={wishRegion} date={date} />
     </QueryClientProvider>
   );
