@@ -64,7 +64,7 @@ const Home = () => {
           <h2>원하는 구</h2>
           <Select onValueChange={setWishRegion} defaultValue={wishRegion}>
             <SelectTrigger>
-              <SelectValue placeholder='원하는 구' />
+              <SelectValue placeholder='선택하세요' />
             </SelectTrigger>
             <SelectContent>
               {regionOptions.map((option: string) => (
