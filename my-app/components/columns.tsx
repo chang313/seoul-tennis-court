@@ -1,6 +1,6 @@
 'use client';
 
-import { CourtInfo } from '@/types';
+import { CourtInfo } from '../types';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import Link from 'next/link';

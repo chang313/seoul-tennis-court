@@ -1,6 +1,6 @@
 'use client';
 
-import { getCourtInfoList } from '@/api';
+import { getCourtInfoList } from '../api';
 import {
   Table,
   TableBody,
@@ -8,8 +8,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { CourtInfo, PublicReservationSportResponse } from '@/types';
+} from './ui/table';
+import { CourtInfo, PublicReservationSportResponse } from '../types';
 import { useQuery } from '@tanstack/react-query';
 import {
   ColumnDef,

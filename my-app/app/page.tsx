@@ -1,15 +1,15 @@
 'use client';
 
-import CourtInfoTable from '@/components/CourtInfoTable';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
+import CourtInfoTable from '../components/CourtInfoTable';
+import { Button } from '../components/ui/button';
+import { Calendar } from '../components/ui/calendar';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '../components/ui/select';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 
