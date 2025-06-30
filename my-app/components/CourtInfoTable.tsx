@@ -22,7 +22,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { columns } from './columns';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -30,6 +30,7 @@ import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Switch } from './ui/switch';
 import DataTableBody from './DataTableBody';
+import { debounce } from 'lodash';
 
 
 interface DataTableProps<TData, TValue> {
@@ -60,6 +61,7 @@ export function DataTable<TData, TValue>({
     { id: 'SVCSTATNM', value: AVAILABLE_STATUS },
   ]);
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [searchInput, setSearchInput] = useState('');
 
   const table = useReactTable({
     data,
@@ -80,9 +82,18 @@ export function DataTable<TData, TValue>({
     table.setPageSize(Number(value));
   };
 
-  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    table.getColumn('SVCNM')?.setFilterValue(event.target.value);
-  };
+  // Debounced filter updater (no useEffect)
+  const debouncedSetFilter = useMemo(() =>
+    debounce((value: string) => {
+      table.getColumn('SVCNM')?.setFilterValue(value);
+    }, 300)
+  , [table]);
+
+  const handleSearchInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchInput(value);
+    debouncedSetFilter(value);
+  }, [debouncedSetFilter]);
 
   const handleChangeIsOnlyAvailable = (value: boolean) => {
     table.getColumn('SVCSTATNM')?.setFilterValue(value ? AVAILABLE_STATUS : '');
@@ -94,7 +105,7 @@ export function DataTable<TData, TValue>({
         <div className='flex items-center py-4'>
           <Input
             placeholder='검색어를 입력하세요'
-            value={(table.getColumn('SVCNM')?.getFilterValue() as string) ?? ''}
+            value={searchInput}
             onChange={handleSearchInputChange}
             className='max-w-sm'
           />
