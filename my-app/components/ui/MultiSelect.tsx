@@ -62,21 +62,7 @@ const MultiSelect = ({ options, header = '', placeholder = '', onChange, value }
                 {selectedValues.length === 0 ? (
                   <span className="text-muted-foreground">{placeholder}</span>
                 ) : (
-                  selectedLabels.map((label) => (
-                    <Badge
-                      key={label}
-                      variant="secondary"
-                      className="text-xs"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const value = options.find((opt) => opt.label === label)?.value;
-                        if (value) handleRemove(value);
-                      }}
-                    >
-                      {label}
-                      <X className="ml-1 h-3 w-3 hover:bg-muted rounded-sm" />
-                    </Badge>
-                  ))
+                  <span className="text-foreground">{selectedValues.length} selected</span>
                 )}
               </div>
               <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
