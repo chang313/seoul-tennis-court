@@ -70,7 +70,7 @@ const Home = () => {
           />
         </div>
       </div>
-      <CourtInfoTable wishRegion={selectedRegions.join(',')} date={date} />
+      <CourtInfoTable wishRegions={selectedRegions} date={date} />
     </QueryClientProvider>
   );
 };

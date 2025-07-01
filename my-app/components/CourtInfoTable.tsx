@@ -182,11 +182,11 @@ export function DataTable<TData, TValue>({
 }
 
 type Props = {
-  wishRegion: string;
+  wishRegions: string[];
   date: Date | undefined;
 };
 
-const CourtInfoTable = ({ wishRegion,  date }: Props) => {
+const CourtInfoTable = ({ wishRegions, date }: Props) => {
   const { data: courtInfoList, isLoading } = useQuery<PublicReservationSportResponse>({
     queryKey: ['courtInfoList'],
     queryFn: () => getCourtInfoList(),
@@ -197,7 +197,7 @@ const CourtInfoTable = ({ wishRegion,  date }: Props) => {
 
   const filterByRegionAndDate = (row: CourtInfo) => {
     // Region filter
-    if (wishRegion && row.AREANM !== wishRegion) return false;
+    if (wishRegions && wishRegions.length > 0 && !wishRegions.includes(row.AREANM)) return false;
     // Date filter
     if (date) {
       const start = new Date(row.RCPTBGNDT);
@@ -222,7 +222,7 @@ const CourtInfoTable = ({ wishRegion,  date }: Props) => {
       <DataTable
         columns={columns}
         data={filteredRows}
-        wishRegion={wishRegion}
+        wishRegion={wishRegions.join(', ')}
         date={date}
         isLoading={isLoading}
       />
