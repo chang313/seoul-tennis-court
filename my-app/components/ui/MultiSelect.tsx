@@ -15,26 +15,31 @@ interface MultiSelectProps {
   header?: string;
   placeholder?: string;
   onChange?: (selected: string[]) => void;
+  value?: string[];
 }
 
-const MultiSelect = ({ options, header = '', placeholder = '', onChange }: MultiSelectProps) => {
+const MultiSelect = ({ options, header = '', placeholder = '', onChange, value }: MultiSelectProps) => {
   const [open, setOpen] = useState(false);
-  const [selectedValues, setSelectedValues] = useState<string[]>([]);
+  const [internalSelectedValues, setInternalSelectedValues] = useState<string[]>([]);
+  const selectedValues = value !== undefined ? value : internalSelectedValues;
 
-  const handleSelect = (value: string) => {
-    setSelectedValues((prev) => {
-      const newValues = prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value];
-      onChange?.(newValues);
-      return newValues;
-    });
+  const handleSelect = (val: string) => {
+    const newValues = selectedValues.includes(val)
+      ? selectedValues.filter((item) => item !== val)
+      : [...selectedValues, val];
+    if (value === undefined) setInternalSelectedValues(newValues);
+    onChange?.(newValues);
   };
 
-  const handleRemove = (value: string) => {
-    setSelectedValues((prev) => {
-      const newValues = prev.filter((item) => item !== value);
-      onChange?.(newValues);
-      return newValues;
-    });
+  const handleRemove = (val: string) => {
+    const newValues = selectedValues.filter((item) => item !== val);
+    if (value === undefined) setInternalSelectedValues(newValues);
+    onChange?.(newValues);
+  };
+
+  const handleClearAll = () => {
+    if (value === undefined) setInternalSelectedValues([]);
+    onChange?.([]);
   };
 
   const selectedLabels = selectedValues
@@ -118,7 +123,7 @@ const MultiSelect = ({ options, header = '', placeholder = '', onChange }: Multi
               </Badge>
             ))}
           </div>
-          <Button variant="outline" size="sm" onClick={() => { setSelectedValues([]); onChange?.([]); }} className="w-fit">
+          <Button variant="outline" size="sm" onClick={handleClearAll} className="w-fit">
             Clear All
           </Button>
         </div>
