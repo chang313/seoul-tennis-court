@@ -44,9 +44,7 @@ const regionOptions = [
 
 const Home = () => {
   const [date, setDate] = useState<Date | undefined>(undefined);
-
   const [wishRegion, setWishRegion] = useState<string>(''); // 원하는 지역구
-
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -58,6 +56,8 @@ const Home = () => {
             selected={date}
             onSelect={setDate}
             className='rounded-md border shadow-sm'
+            captionLayout='dropdown'
+            
           />
         </div>
         <div className="flex flex-col">
