@@ -8,37 +8,43 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
 import { Badge } from './badge'
 
-const options = [
-  { value: "react", label: "React" },
-  { value: "vue", label: "Vue" },
-  { value: "angular", label: "Angular" },
-  { value: "svelte", label: "Svelte" },
-  { value: "nextjs", label: "Next.js" },
-  { value: "nuxtjs", label: "Nuxt.js" },
-  { value: "gatsby", label: "Gatsby" },
-  { value: "remix", label: "Remix" },
-]
+export type MultiSelectOption = { value: string; label: string };
 
-export default function Component() {
-  const [open, setOpen] = useState(false)
-  const [selectedValues, setSelectedValues] = useState<string[]>([])
+interface MultiSelectProps {
+  options: MultiSelectOption[];
+  header?: string;
+  placeholder?: string;
+  onChange?: (selected: string[]) => void;
+}
+
+const MultiSelect = ({ options, header = '', placeholder = '', onChange }: MultiSelectProps) => {
+  const [open, setOpen] = useState(false);
+  const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
   const handleSelect = (value: string) => {
-    setSelectedValues((prev) => (prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]))
-  }
+    setSelectedValues((prev) => {
+      const newValues = prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value];
+      onChange?.(newValues);
+      return newValues;
+    });
+  };
 
   const handleRemove = (value: string) => {
-    setSelectedValues((prev) => prev.filter((item) => item !== value))
-  }
+    setSelectedValues((prev) => {
+      const newValues = prev.filter((item) => item !== value);
+      onChange?.(newValues);
+      return newValues;
+    });
+  };
 
   const selectedLabels = selectedValues
     .map((value) => options.find((option) => option.value === value)?.label)
-    .filter(Boolean)
+    .filter(Boolean);
 
   return (
     <div className="w-full max-w-md mx-auto space-y-4">
       <div className="space-y-2">
-        <label className="text-sm font-medium">Select Frameworks</label>
+        {header && <label className="text-sm font-medium">{header}</label>}
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
@@ -49,7 +55,7 @@ export default function Component() {
             >
               <div className="flex flex-wrap gap-1 flex-1">
                 {selectedValues.length === 0 ? (
-                  <span className="text-muted-foreground">Select frameworks...</span>
+                  <span className="text-muted-foreground">{placeholder}</span>
                 ) : (
                   selectedLabels.map((label) => (
                     <Badge
@@ -57,9 +63,9 @@ export default function Component() {
                       variant="secondary"
                       className="text-xs"
                       onClick={(e) => {
-                        e.stopPropagation()
-                        const value = options.find((opt) => opt.label === label)?.value
-                        if (value) handleRemove(value)
+                        e.stopPropagation();
+                        const value = options.find((opt) => opt.label === label)?.value;
+                        if (value) handleRemove(value);
                       }}
                     >
                       {label}
@@ -73,9 +79,9 @@ export default function Component() {
           </PopoverTrigger>
           <PopoverContent className="w-full p-0" align="start">
             <Command>
-              <CommandInput placeholder="Search frameworks..." />
+              <CommandInput placeholder={placeholder} />
               <CommandList>
-                <CommandEmpty>No framework found.</CommandEmpty>
+                <CommandEmpty>No option found.</CommandEmpty>
                 <CommandGroup>
                   {options.map((option) => (
                     <CommandItem key={option.value} value={option.value} onSelect={() => handleSelect(option.value)}>
@@ -105,18 +111,20 @@ export default function Component() {
                 <X
                   className="ml-1 h-3 w-3 hover:bg-primary/20 rounded-sm cursor-pointer"
                   onClick={() => {
-                    const value = options.find((opt) => opt.label === label)?.value
-                    if (value) handleRemove(value)
+                    const value = options.find((opt) => opt.label === label)?.value;
+                    if (value) handleRemove(value);
                   }}
                 />
               </Badge>
             ))}
           </div>
-          <Button variant="outline" size="sm" onClick={() => setSelectedValues([])} className="w-fit">
+          <Button variant="outline" size="sm" onClick={() => { setSelectedValues([]); onChange?.([]); }} className="w-fit">
             Clear All
           </Button>
         </div>
       )}
     </div>
-  )
-}
+  );
+};
+
+export default MultiSelect;

@@ -11,6 +11,7 @@ import {
 } from '../components/ui/select';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
+import MultiSelect from '../components/ui/MultiSelect';
 
 const queryClient = new QueryClient();
 
@@ -44,7 +45,7 @@ const regionOptions = [
 
 const Home = () => {
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [wishRegion, setWishRegion] = useState<string>(''); // 원하는 지역구
+  const [selectedRegions, setSelectedRegions] = useState<string[]>([]); // for MultiSelect
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -61,22 +62,15 @@ const Home = () => {
           />
         </div>
         <div className="flex flex-col">
-          <h2>원하는 구</h2>
-          <Select onValueChange={setWishRegion} defaultValue={wishRegion}>
-            <SelectTrigger>
-              <SelectValue placeholder='선택하세요' />
-            </SelectTrigger>
-            <SelectContent>
-              {regionOptions.map((option: string) => (
-                <SelectItem key={option} value={option}>
-                  {option}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <MultiSelect
+            options={regionOptions.map((r) => ({ value: r, label: r }))}
+            header="원하는 구"
+            placeholder="선택하세요"
+            onChange={setSelectedRegions}
+          />
         </div>
       </div>
-      <CourtInfoTable wishRegion={wishRegion} date={date} />
+      <CourtInfoTable wishRegion={selectedRegions.join(',')} date={date} />
     </QueryClientProvider>
   );
 };
