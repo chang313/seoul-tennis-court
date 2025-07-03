@@ -184,9 +184,10 @@ export function DataTable<TData, TValue>({
 type Props = {
   wishRegions: string[];
   date: Date | undefined;
+  livingRegion: string;
 };
 
-const CourtInfoTable = ({ wishRegions, date }: Props) => {
+const CourtInfoTable = ({ wishRegions, date, livingRegion }: Props) => {
   const { data: courtInfoList, isLoading } = useQuery<PublicReservationSportResponse>({
     queryKey: ['courtInfoList'],
     queryFn: () => getCourtInfoList(),
@@ -209,6 +210,18 @@ const CourtInfoTable = ({ wishRegions, date }: Props) => {
       const endDay = toDay(end);
       // Only keep if selectedDay is between startDay and endDay (inclusive)
       if (selectedDay < startDay || selectedDay > endDay) return false;
+    }
+    // Living region filter
+    if (
+      livingRegion &&
+      (
+        row.SVCNM.includes('구민만 가능') ||
+        row.SVCNM.includes('주민 전용 시설') ||
+        row.SVCNM.includes('주민 대상 예약')
+      ) &&
+      !row.SVCNM.includes(livingRegion)
+    ) {
+      return false;
     }
     return true;
   };
