@@ -12,6 +12,9 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 import MultiSelect from '../components/ui/MultiSelect';
+import DateSelector from '../components/DateSelector';
+import RegionMultiSelect from '../components/RegionMultiSelect';
+import LivingRegionSelect from '../components/LivingRegionSelect';
 
 const queryClient = new QueryClient();
 
@@ -45,49 +48,25 @@ const regionOptions = [
 
 const Home = () => {
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [selectedRegions, setSelectedRegions] = useState<string[]>([]); // for MultiSelect
-  const [livingRegion, setLivingRegion] = useState<string>(''); // for single Select
+  const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+  const [livingRegion, setLivingRegion] = useState<string>('');
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex gap-8">
-        <div className="flex flex-col">
-          <h2>원하는 예약일</h2>
-          <Calendar
-            mode='single'
-            selected={date}
-            onSelect={setDate}
-            className='rounded-md border shadow-sm'
-            captionLayout='dropdown'
-          />
-        </div>
+        <DateSelector date={date} onDateChange={setDate} />
         <div className="flex flex-col">
           <div className="flex gap-2 items-end">
-            <MultiSelect
+            <RegionMultiSelect
               options={regionOptions.map((r) => ({ value: r, label: r }))}
-              header="원하는 구"
-              placeholder="선택하세요"
+              selectedRegions={selectedRegions}
               onChange={setSelectedRegions}
             />
-            <div className="flex flex-col">
-              <label htmlFor="living-region-select" className="mb-1 text-sm font-medium">거주하는 지역구</label>
-              <Select
-                value={livingRegion}
-                onValueChange={setLivingRegion}
-                aria-label="거주 구 선택"
-              >
-                <SelectTrigger id="living-region-select" tabIndex={0} className="min-w-[120px]" aria-label="거주 구 선택">
-                  <SelectValue placeholder="거주 구" />
-                </SelectTrigger>
-                <SelectContent>
-                  {regionOptions.map((region) => (
-                    <SelectItem key={region} value={region} aria-label={region}>
-                      {region}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <LivingRegionSelect
+              options={regionOptions}
+              value={livingRegion}
+              onChange={setLivingRegion}
+            />
           </div>
         </div>
       </div>
