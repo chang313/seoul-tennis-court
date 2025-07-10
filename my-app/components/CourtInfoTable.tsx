@@ -31,6 +31,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Switch } from './ui/switch';
 import DataTableBody from './DataTableBody';
 import { debounce } from 'lodash';
+import { Search, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 
 interface DataTableProps<TData, TValue> {
@@ -99,16 +100,28 @@ export function DataTable<TData, TValue>({
     table.getColumn('SVCSTATNM')?.setFilterValue(value ? AVAILABLE_STATUS : '');
   };
 
+  const handleClearFilter = () => {
+    table.resetColumnFilters();
+    setSearchInput('');
+  };
+
   return (
     <div>
       <div className='flex items-center justify-between'>
-        <div className='flex items-center py-4'>
-          <Input
-            placeholder='검색어를 입력하세요'
-            value={searchInput}
-            onChange={handleSearchInputChange}
-            className='max-w-sm'
-          />
+        <div className='flex items-center py-4 gap-2'>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder='검색어를 입력하세요'
+              value={searchInput}
+              onChange={handleSearchInputChange}
+              className='max-w-sm pl-10'
+            />
+          </div>
+          <Button variant="outline" size="sm" onClick={handleClearFilter}>
+            <X className="h-4 w-4 mr-2" />
+            Clear
+          </Button>
         </div>
         <div className='flex items-center space-x-2'>
           <Switch
@@ -165,7 +178,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            이전
+            <ChevronLeft className="h-4 w-4" />
           </Button>
           <Button
             variant='outline'
@@ -173,7 +186,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            다음
+            <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
       </div>

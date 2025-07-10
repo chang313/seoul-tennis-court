@@ -53,24 +53,38 @@ const Home = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex gap-8">
-        <DateSelector date={date} onDateChange={setDate} />
-        <div className="flex flex-col">
-          <div className="flex gap-2 items-end">
-            <RegionMultiSelect
-              options={regionOptions.map((r) => ({ value: r, label: r }))}
-              selectedRegions={selectedRegions}
-              onChange={setSelectedRegions}
-            />
-            <LivingRegionSelect
-              options={regionOptions}
-              value={livingRegion}
-              onChange={setLivingRegion}
+      <div className="container mx-auto p-4">
+        <header className="flex items-center justify-between py-6">
+          <div className="flex items-center gap-2">
+            <img src="/tennis.svg" alt="logo" className="h-8 w-8" />
+            <h1 className="text-2xl font-bold">Seoul Tennis Court</h1>
+          </div>
+        </header>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
+          <div className="lg:col-span-1">
+            <div className="space-y-6 rounded-lg border p-4">
+              <DateSelector date={date} onDateChange={setDate} />
+              <RegionMultiSelect
+                options={regionOptions.map((r) => ({ value: r, label: r }))}
+                selectedRegions={selectedRegions}
+                onChange={setSelectedRegions}
+              />
+              <LivingRegionSelect
+                options={regionOptions}
+                value={livingRegion}
+                onChange={setLivingRegion}
+              />
+            </div>
+          </div>
+          <div className="lg:col-span-3">
+            <CourtInfoTable
+              wishRegions={selectedRegions}
+              date={date}
+              livingRegion={livingRegion}
             />
           </div>
         </div>
       </div>
-      <CourtInfoTable wishRegions={selectedRegions} date={date} livingRegion={livingRegion} />
     </QueryClientProvider>
   );
 };

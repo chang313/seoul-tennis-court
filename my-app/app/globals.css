@@ -118,5 +118,10 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-color: #f7f7f8;
+  }
+
+  .dark body {
+    background-color: #1a1a1a;
   }
 }
