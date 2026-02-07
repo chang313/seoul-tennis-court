@@ -1,8 +1,15 @@
 import { TableRow, TableCell } from './ui/table';
 import Spinner from './ui/Spinner';
-import { flexRender } from '@tanstack/react-table';
+import { ColumnDef, flexRender, Table } from '@tanstack/react-table';
+import { CourtInfo } from '../types';
 
-const DataTableBody = ({ isLoading, columns, table }: any) => {
+type DataTableBodyProps = {
+  isLoading: boolean;
+  columns: ColumnDef<CourtInfo>[];
+  table: Table<CourtInfo>;
+};
+
+const DataTableBody = ({ isLoading, columns, table }: DataTableBodyProps) => {
   if (isLoading) {
     return (
       <TableRow>
@@ -16,9 +23,9 @@ const DataTableBody = ({ isLoading, columns, table }: any) => {
   if (table.getRowModel().rows?.length) {
     return (
       <>
-        {table.getRowModel().rows.map((row: any) => (
+        {table.getRowModel().rows.map((row) => (
           <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-            {row.getVisibleCells().map((cell: any) => (
+            {row.getVisibleCells().map((cell) => (
               <TableCell key={cell.id}>
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </TableCell>
@@ -38,4 +45,4 @@ const DataTableBody = ({ isLoading, columns, table }: any) => {
   );
 };
 
-export default DataTableBody; 
+export default DataTableBody;
