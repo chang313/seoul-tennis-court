@@ -20,4 +20,4 @@ const DateSelector: FC<DateSelectorProps> = ({ date, onDateChange }) => (
   </div>
 );
 
-export default DateSelector; 
+export default DateSelector;

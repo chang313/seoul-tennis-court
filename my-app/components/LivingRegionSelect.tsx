@@ -35,4 +35,4 @@ const LivingRegionSelect: FC<LivingRegionSelectProps> = ({ options, value, onCha
   </div>
 );
 
-export default LivingRegionSelect; 
+export default LivingRegionSelect;

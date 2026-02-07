@@ -20,4 +20,4 @@ const RegionMultiSelect: FC<RegionMultiSelectProps> = ({ options, selectedRegion
   />
 );
 
-export default RegionMultiSelect; 
+export default RegionMultiSelect;

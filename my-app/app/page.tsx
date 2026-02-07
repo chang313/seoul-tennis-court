@@ -1,22 +1,11 @@
 'use client';
 
 import CourtInfoTable from '../components/CourtInfoTable';
-import { Calendar } from '../components/ui/calendar';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../components/ui/select';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
-import MultiSelect from '../components/ui/MultiSelect';
 import DateSelector from '../components/DateSelector';
 import RegionMultiSelect from '../components/RegionMultiSelect';
 import LivingRegionSelect from '../components/LivingRegionSelect';
-
-const queryClient = new QueryClient();
 
 const regionOptions = [
   '강남구',
@@ -47,6 +36,7 @@ const regionOptions = [
 ];
 
 const Home = () => {
+  const [queryClient] = useState(() => new QueryClient());
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
   const [livingRegion, setLivingRegion] = useState<string>('');

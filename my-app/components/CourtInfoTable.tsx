@@ -30,14 +30,9 @@ import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Switch } from './ui/switch';
 import DataTableBody from './DataTableBody';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { Search, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
-
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
 
 const pageSizeOptions = [10, 20, 30, 40, 50];
 
