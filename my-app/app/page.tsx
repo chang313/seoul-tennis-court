@@ -1,18 +1,11 @@
 'use client';
 
 import CourtInfoTable from '../components/CourtInfoTable';
-import { Calendar } from '../components/ui/calendar';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../components/ui/select';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
-
-const queryClient = new QueryClient();
+import DateSelector from '../components/DateSelector';
+import RegionMultiSelect from '../components/RegionMultiSelect';
+import LivingRegionSelect from '../components/LivingRegionSelect';
 
 const regionOptions = [
   '강남구',
@@ -43,35 +36,45 @@ const regionOptions = [
 ];
 
 const Home = () => {
+  const [queryClient] = useState(() => new QueryClient());
   const [date, setDate] = useState<Date | undefined>(undefined);
-
-  const [wishRegion, setWishRegion] = useState<string>(''); // 원하는 지역구
-
+  const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+  const [livingRegion, setLivingRegion] = useState<string>('');
 
   return (
     <QueryClientProvider client={queryClient}>
-      <h2>원하는 예약일</h2>
-      <Calendar
-        mode='single'
-        selected={date}
-        onSelect={setDate}
-        className='rounded-md border shadow-sm'
-      />
-      <h2>원하는 구</h2>
-      <Select onValueChange={setWishRegion} defaultValue={wishRegion}>
-        <SelectTrigger>
-          <SelectValue placeholder='원하는 구' />
-        </SelectTrigger>
-        <SelectContent>
-          {regionOptions.map((option: string) => (
-            <SelectItem key={option} value={option}>
-              {option}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
-      <CourtInfoTable wishRegion={wishRegion} date={date} />
+      <div className="container mx-auto p-4">
+        <header className="flex items-center justify-between py-6">
+          <div className="flex items-center gap-2">
+            <img src="/tennis.svg" alt="logo" className="h-8 w-8" />
+            <h1 className="text-2xl font-bold">Seoul Tennis Court</h1>
+          </div>
+        </header>
+        <div className="grid grid-cols-1 gap-4 md:gap-6 md:grid-cols-3 lg:grid-cols-4">
+          <div className="md:col-span-1 lg:col-span-1">
+            <div className="space-y-4 md:space-y-6 rounded-lg border p-3 md:p-4">
+              <DateSelector date={date} onDateChange={setDate} />
+              <RegionMultiSelect
+                options={regionOptions.map((r) => ({ value: r, label: r }))}
+                selectedRegions={selectedRegions}
+                onChange={setSelectedRegions}
+              />
+              <LivingRegionSelect
+                options={regionOptions}
+                value={livingRegion}
+                onChange={setLivingRegion}
+              />
+            </div>
+          </div>
+          <div className="md:col-span-2 lg:col-span-3">
+            <CourtInfoTable
+              wishRegions={selectedRegions}
+              date={date}
+              livingRegion={livingRegion}
+            />
+          </div>
+        </div>
+      </div>
     </QueryClientProvider>
   );
 };

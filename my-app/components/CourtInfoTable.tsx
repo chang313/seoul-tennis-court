@@ -22,18 +22,17 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { columns } from './columns';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Switch } from './ui/switch';
+import DataTableBody from './DataTableBody';
+import debounce from 'lodash/debounce';
+import { Search, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
 
 const pageSizeOptions = [10, 20, 30, 40, 50];
 
@@ -42,6 +41,7 @@ type TableProps = {
   data: CourtInfo[];
   wishRegion: string;
   date: Date | undefined;
+  isLoading: boolean;
 };
 
 const AVAILABLE_STATUS = '접수중';
@@ -51,11 +51,13 @@ export function DataTable<TData, TValue>({
   data,
   wishRegion,
   date,
+  isLoading,
 }: TableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: 'SVCSTATNM', value: AVAILABLE_STATUS },
   ]);
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [searchInput, setSearchInput] = useState('');
 
   const table = useReactTable({
     data,
@@ -76,24 +78,45 @@ export function DataTable<TData, TValue>({
     table.setPageSize(Number(value));
   };
 
-  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    table.getColumn('SVCNM')?.setFilterValue(event.target.value);
-  };
+  // Debounced filter updater (no useEffect)
+  const debouncedSetFilter = useMemo(() =>
+    debounce((value: string) => {
+      table.getColumn('SVCNM')?.setFilterValue(value);
+    }, 300)
+  , [table]);
+
+  const handleSearchInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchInput(value);
+    debouncedSetFilter(value);
+  }, [debouncedSetFilter]);
 
   const handleChangeIsOnlyAvailable = (value: boolean) => {
     table.getColumn('SVCSTATNM')?.setFilterValue(value ? AVAILABLE_STATUS : '');
   };
 
+  const handleClearFilter = () => {
+    table.resetColumnFilters();
+    setSearchInput('');
+  };
+
   return (
     <div>
       <div className='flex items-center justify-between'>
-        <div className='flex items-center py-4'>
-          <Input
-            placeholder='Filter rows...'
-            value={(table.getColumn('SVCNM')?.getFilterValue() as string) ?? ''}
-            onChange={handleSearchInputChange}
-            className='max-w-sm'
-          />
+        <div className='flex items-center py-4 gap-2'>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder='검색어를 입력하세요'
+              value={searchInput}
+              onChange={handleSearchInputChange}
+              className='max-w-sm pl-10'
+            />
+          </div>
+          <Button variant="outline" size="sm" onClick={handleClearFilter}>
+            <X className="h-4 w-4 mr-2" />
+            Clear
+          </Button>
         </div>
         <div className='flex items-center space-x-2'>
           <Switch
@@ -123,23 +146,7 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className='h-24 text-center'>
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
+            <DataTableBody isLoading={isLoading} columns={columns} table={table} />
           </TableBody>
         </Table>
       </div>
@@ -166,7 +173,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            <ChevronLeft className="h-4 w-4" />
           </Button>
           <Button
             variant='outline'
@@ -174,7 +181,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
       </div>
@@ -183,12 +190,13 @@ export function DataTable<TData, TValue>({
 }
 
 type Props = {
-  wishRegion: string;
+  wishRegions: string[];
   date: Date | undefined;
+  livingRegion: string;
 };
 
-const CourtInfoTable = ({ wishRegion,  date }: Props) => {
-  const { data: courtInfoList } = useQuery<PublicReservationSportResponse>({
+const CourtInfoTable = ({ wishRegions, date, livingRegion }: Props) => {
+  const { data: courtInfoList, isLoading } = useQuery<PublicReservationSportResponse>({
     queryKey: ['courtInfoList'],
     queryFn: () => getCourtInfoList(),
     staleTime: 1000 * 60 * 5,
@@ -198,7 +206,7 @@ const CourtInfoTable = ({ wishRegion,  date }: Props) => {
 
   const filterByRegionAndDate = (row: CourtInfo) => {
     // Region filter
-    if (wishRegion && row.AREANM !== wishRegion) return false;
+    if (wishRegions && wishRegions.length > 0 && !wishRegions.includes(row.AREANM)) return false;
     // Date filter
     if (date) {
       const start = new Date(row.RCPTBGNDT);
@@ -210,6 +218,18 @@ const CourtInfoTable = ({ wishRegion,  date }: Props) => {
       const endDay = toDay(end);
       // Only keep if selectedDay is between startDay and endDay (inclusive)
       if (selectedDay < startDay || selectedDay > endDay) return false;
+    }
+    // Living region filter
+    if (
+      livingRegion &&
+      (
+        row.SVCNM.includes('구민만 가능') ||
+        row.SVCNM.includes('주민 전용 시설') ||
+        row.SVCNM.includes('주민 대상 예약')
+      ) &&
+      !row.SVCNM.includes(livingRegion)
+    ) {
+      return false;
     }
     return true;
   };
@@ -223,8 +243,9 @@ const CourtInfoTable = ({ wishRegion,  date }: Props) => {
       <DataTable
         columns={columns}
         data={filteredRows}
-        wishRegion={wishRegion}
+        wishRegion={wishRegions.join(', ')}
         date={date}
+        isLoading={isLoading}
       />
     </div>
   );

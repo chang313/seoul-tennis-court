@@ -5,6 +5,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
+import { Badge } from './ui/badge';
 
 export const columns: ColumnDef<CourtInfo>[] = [
   {
@@ -24,6 +25,11 @@ export const columns: ColumnDef<CourtInfo>[] = [
   {
     accessorKey: 'SVCSTATNM',
     header: '상태',
+    cell: ({ row }) => {
+      const status = row.getValue('SVCSTATNM') as string;
+      const variant = status === '접수중' ? 'default' : 'destructive';
+      return <Badge variant={variant}>{status}</Badge>;
+    },
   },
   {
     accessorKey: 'AREANM',
@@ -49,9 +55,17 @@ export const columns: ColumnDef<CourtInfo>[] = [
   {
     accessorKey: 'RCPTBGNDT',
     header: '접수 시작일시',
+    cell: ({ row }) => {
+      const value = row.getValue('RCPTBGNDT') as string;
+      return <span className="whitespace-nowrap">{value?.replace(/\.0$/, '')}</span>;
+    },
   },
   {
     accessorKey: 'RCPTENDDT',
     header: '접수 종료일시',
+    cell: ({ row }) => {
+      const value = row.getValue('RCPTENDDT') as string;
+      return <span className="whitespace-nowrap">{value?.replace(/\.0$/, '')}</span>;
+    },
   },
 ];
