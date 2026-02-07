@@ -60,9 +60,9 @@ const Home = () => {
             <h1 className="text-2xl font-bold">Seoul Tennis Court</h1>
           </div>
         </header>
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
-          <div className="lg:col-span-1">
-            <div className="space-y-6 rounded-lg border p-4">
+        <div className="grid grid-cols-1 gap-4 md:gap-6 md:grid-cols-3 lg:grid-cols-4">
+          <div className="md:col-span-1 lg:col-span-1">
+            <div className="space-y-4 md:space-y-6 rounded-lg border p-3 md:p-4">
               <DateSelector date={date} onDateChange={setDate} />
               <RegionMultiSelect
                 options={regionOptions.map((r) => ({ value: r, label: r }))}
@@ -76,7 +76,7 @@ const Home = () => {
               />
             </div>
           </div>
-          <div className="lg:col-span-3">
+          <div className="md:col-span-2 lg:col-span-3">
             <CourtInfoTable
               wishRegions={selectedRegions}
               date={date}

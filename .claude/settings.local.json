@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm dev:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(claude doctor)",
+      "Bash(cursor:*)",
+      "Bash(open:*)",
+      "Bash(lsof:*)",
+      "Bash(screencapture:*)",
+      "Bash(osascript:*)",
+      "Bash(brew install:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

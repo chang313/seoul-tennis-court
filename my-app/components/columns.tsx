@@ -55,9 +55,17 @@ export const columns: ColumnDef<CourtInfo>[] = [
   {
     accessorKey: 'RCPTBGNDT',
     header: '접수 시작일시',
+    cell: ({ row }) => {
+      const value = row.getValue('RCPTBGNDT') as string;
+      return <span className="whitespace-nowrap">{value?.replace(/\.0$/, '')}</span>;
+    },
   },
   {
     accessorKey: 'RCPTENDDT',
     header: '접수 종료일시',
+    cell: ({ row }) => {
+      const value = row.getValue('RCPTENDDT') as string;
+      return <span className="whitespace-nowrap">{value?.replace(/\.0$/, '')}</span>;
+    },
   },
 ];
